@@ -1,0 +1,14 @@
+[project]
+name = "sublime-csv-table"
+version = "0.0.0"
+description = "Sublime Text command that formats a CSV buffer as an aligned table."
+requires-python = ">=3.8"
+
+[dependency-groups]
+test = ["pytest>=8"]
+
+[tool.uv]
+default-groups = ["test"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]

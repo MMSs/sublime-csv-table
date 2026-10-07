@@ -313,7 +313,7 @@ def _pad_column(cells: List[Tuple[str, bool]]) -> List[str]:
         if index is None:
             aligned.append(value.ljust(column_width))
             continue
-        aligned.append(value)
+        aligned.append(value.rjust(column_width))
     return aligned
 
 

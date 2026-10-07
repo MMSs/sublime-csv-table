@@ -233,7 +233,7 @@ If the input ends with a newline, the output ends with the chosen newline. If it
 
 ## Tests
 
-`python3 -m unittest discover -s tests` from the repository root. No test dependencies.
+`uv run pytest` from the repository root. The only test dependency is pytest.
 
 `tests/test_csv_format.py` covers:
 

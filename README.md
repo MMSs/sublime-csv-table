@@ -36,12 +36,12 @@ mklink /D "%APPDATA%\Sublime Text\Packages\CSV Table" "C:\path\to\sublime-csv-ta
 4. Choose **Auto-detect**, or pick comma, semicolon, tab, or pipe when detection is wrong.
 5. Save the buffer when the result looks right.
 
-Undo once restores the previous text. The syntax name in the status bar is CSV.
+Undo once restores the previous text. The syntax name in the status bar is CSV. Word wrap is turned off for that view so the aligned rows stay on one line.
 
 Nothing changes when the buffer is empty, is not a table, has an unclosed quote, or you dismiss the panel.
 
 ## Tests
 
 ```bash
-python3 -m unittest discover -s tests
+uv run pytest
 ```

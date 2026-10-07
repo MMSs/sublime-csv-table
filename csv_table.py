@@ -1,7 +1,16 @@
 """Sublime command that formats the current buffer as a CSV table."""
 
+import os
+import sys
+
 import sublime
 import sublime_plugin
+
+# Sublime loads this file as "<package>.csv_table", so a bare import of the
+# sibling module does not resolve. Put the package directory on sys.path.
+_PACKAGE_DIR = os.path.dirname(os.path.realpath(__file__))
+if _PACKAGE_DIR not in sys.path:
+    sys.path.insert(0, _PACKAGE_DIR)
 
 from csv_format import FormatError, format_csv
 
@@ -45,6 +54,7 @@ class FormatCsvTableCommand(sublime_plugin.TextCommand):
             return
         self.view.run_command("csv_table_replace", {"text": formatted})
         self.view.assign_syntax(_SYNTAX)
+        self.view.settings().set("word_wrap", False)
         self._status(_STATUS_FORMATTED)
 
     def _status(self, message: str) -> None:

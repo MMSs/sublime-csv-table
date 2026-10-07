@@ -1,0 +1,6 @@
+[
+    {
+        "caption": "Format CSV Table",
+        "command": "format_csv_table"
+    }
+]

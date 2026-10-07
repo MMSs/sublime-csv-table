@@ -1,0 +1,27 @@
+%YAML 1.2
+---
+name: CSV
+file_extensions:
+  - csv
+scope: text.csv
+
+contexts:
+  main:
+    - match: '"'
+      push: double_quoted
+    - match: "'"
+      push: single_quoted
+
+  double_quoted:
+    - meta_scope: string.quoted.double.csv
+    - match: '""'
+      scope: constant.character.escape.csv
+    - match: '"'
+      pop: true
+
+  single_quoted:
+    - meta_scope: string.quoted.single.csv
+    - match: "''"
+      scope: constant.character.escape.csv
+    - match: "'"
+      pop: true

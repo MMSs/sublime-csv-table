@@ -2,12 +2,19 @@
 name = "sublime-csv-table"
 version = "0.0.0"
 description = "Sublime Text command that formats a CSV buffer as an aligned table."
+license = "MIT"
+authors = [{ name = "Mohab" }]
 requires-python = ">=3.8"
+
+[project.urls]
+Repository = "https://github.com/MMSs/sublime-csv-table"
+Issues = "https://github.com/MMSs/sublime-csv-table/issues"
 
 [dependency-groups]
 test = ["pytest>=8"]
 
 [tool.uv]
+package = false
 default-groups = ["test"]
 
 [tool.pytest.ini_options]

@@ -1,32 +1,32 @@
 # CSV Table
 
-Sublime Text 4 plugin with one command: **Format CSV Table**.
+A [Sublime Text 4](https://www.sublimetext.com/) plugin with one command, **Format CSV Table**, that rewrites a CSV buffer as an aligned, coloured table you can edit by hand.
 
 It reads the current buffer, detects the delimiter (or uses the one you pick), and rewrites the buffer as an aligned CSV table. Text stays left-aligned. Numbers stay right-aligned on the last digit. Quoted cells stay quoted. Every row is padded with spaces to the width of the widest row. It then sets the syntax to CSV.
 
+The output is still valid CSV, so you can save it and keep using it. It needs no third-party Python packages and makes no network requests.
+
+## Requirements
+
+- Sublime Text 4 (build 4107 or later) on macOS, Linux, or Windows.
+- Nothing else. The plugin runs on Sublime's bundled Python 3.8.
+
 ## Install
 
-Sublime Text 4. The package folder must be named `CSV Table`.
+The package folder must be named `CSV Table`, because the syntax paths include that name.
 
-Symlink this repository. Sublime loads it as soon as the folder is there. If the command is missing, restart Sublime.
+### Manual
 
-macOS:
-
-```bash
-ln -s /path/to/sublime-csv-table "$HOME/Library/Application Support/Sublime Text/Packages/CSV Table"
-```
-
-Linux:
+Find your `Packages` folder with **Preferences → Browse Packages…**, then clone into it:
 
 ```bash
-ln -s /path/to/sublime-csv-table "$HOME/.config/sublime-text/Packages/CSV Table"
+cd "<Packages folder>"
+git clone https://github.com/MMSs/sublime-csv-table.git "CSV Table"
 ```
 
-Windows, from an elevated command prompt:
+Sublime loads it as soon as the folder is there. If the command is missing, restart Sublime.
 
-```bat
-mklink /D "%APPDATA%\Sublime Text\Packages\CSV Table" "C:\path\to\sublime-csv-table"
-```
+To update, run `git pull` in that folder. To uninstall, delete the `CSV Table` folder, and `Packages/User/CSV Table/` and `Packages/User/CSV Table.sublime-settings` if they exist.
 
 ## Use
 
@@ -57,14 +57,16 @@ Undo once restores the previous text. The syntax name in the status bar is CSV. 
 
 Nothing changes when the buffer is empty, is not a table, has an unclosed quote, or you dismiss the panel.
 
-## Tests
+## Limitations
 
-```bash
-uv run pytest
-```
+- It formats the whole buffer, not a selection.
+- Alignment assumes a monospace font. Wide characters (CJK, emoji) can push columns out of line.
+- Highlighting stops after `max_highlight_lines`, so very large files are aligned but not coloured past that point.
 
-The syntax files are generated. After you edit `scripts/build_syntaxes.py`, run:
+## Contributing
 
-```bash
-python3 scripts/build_syntaxes.py
-```
+Bug reports and pull requests are welcome. See [CONTRIBUTING.md](CONTRIBUTING.md). To report a security issue, see [SECURITY.md](SECURITY.md).
+
+## License
+
+[MIT](LICENSE)

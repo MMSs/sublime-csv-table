@@ -1,0 +1,18 @@
+* text=auto eol=lf
+
+# Package Control installs from the GitHub tag archive. Keep development
+# files out of it, so users get only the plugin.
+/.claude export-ignore
+/.editorconfig export-ignore
+/.gitattributes export-ignore
+/.github export-ignore
+/.gitignore export-ignore
+/AGENTS.md export-ignore
+/CLAUDE.md export-ignore
+/CONTRIBUTING.md export-ignore
+/SECURITY.md export-ignore
+/docs export-ignore
+/pyproject.toml export-ignore
+/scripts export-ignore
+/tests export-ignore
+/uv.lock export-ignore

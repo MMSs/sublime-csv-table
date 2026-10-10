@@ -1,0 +1,51 @@
+name: Bug report
+description: Something formats or highlights wrongly, or the command fails.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you saw and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: The smallest CSV that shows the problem, the delimiter you chose, and the steps. Paste the CSV in a code block.
+    validations:
+      required: true
+  - type: input
+    id: sublime
+    attributes:
+      label: Sublime Text build
+      description: Help → About Sublime Text.
+      placeholder: "4200"
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: CSV Table version
+      description: Package Control → List Packages, or `git describe --tags` in the package folder.
+    validations:
+      required: true
+  - type: input
+    id: os
+    attributes:
+      label: OS
+      placeholder: macOS 15, Ubuntu 24.04, Windows 11
+    validations:
+      required: true
+  - type: input
+    id: scheme
+    attributes:
+      label: Colour scheme
+      description: Only for colour or highlighting issues.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Console output
+      description: View → Show Console. Paste any errors that mention CSV Table.
+      render: text

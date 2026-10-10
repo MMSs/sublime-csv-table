@@ -32,6 +32,7 @@ jobs:
       - uses: actions/setup-node@v7
         with:
           node-version: lts/*
+      - uses: astral-sh/setup-uv@v10.3.0
       - id: bump
         # Title and body arrive through env, never interpolated into the script.
         env:
@@ -39,6 +40,9 @@ jobs:
           BODY: ${{ github.event.pull_request.body }}
           PR: ${{ github.event.pull_request.number }}
         run: node scripts/release/bump.mjs "$TITLE" "$BODY" "$PR"
+      # uv.lock records the project version too; CI runs `uv sync --locked`.
+      - if: steps.bump.outputs.version
+        run: uv lock
       - if: steps.bump.outputs.version
         env:
           GH_TOKEN: ${{ github.token }}

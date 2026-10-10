@@ -1,21 +1,13 @@
 """Write the CSV syntaxes, one per delimiter, with a colour per column."""
 
 import os
+import sys
 from typing import List, Tuple
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, ROOT)
 
-# Scopes that common colour schemes give distinct foregrounds. Columns cycle
-# through them, so column 8 looks like column 1.
-COLUMN_SCOPES = [
-    "variable.other",
-    "keyword.control",
-    "string.unquoted",
-    "constant.numeric",
-    "entity.name.function",
-    "entity.name.tag",
-    "support.type",
-]
+from csv_scheme import COLUMN_SCOPES, column_scope  # noqa: E402
 
 # (file name, syntax name, delimiter regex, hidden, file extensions)
 SYNTAXES: List[Tuple[str, str, str, bool, List[str]]] = [
@@ -54,9 +46,9 @@ def render(name: str, delimiter: str, hidden: bool, extensions: List[str]) -> st
         ]
     )
     count = len(COLUMN_SCOPES)
-    for number, scope in enumerate(COLUMN_SCOPES, start=1):
+    for number in range(1, count + 1):
         following = number % count + 1
-        color = f"{scope}.column-{number}.csv"
+        color = column_scope(number)
         lines.extend(
             [
                 "",

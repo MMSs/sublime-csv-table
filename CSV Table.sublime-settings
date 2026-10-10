@@ -1,4 +1,8 @@
 {
+    // Give each column its own colour from the colour scheme.
+    // When false, every column uses the scheme's plain text colour.
+    "color_columns": true,
+
     // Underline the first record.
     "underline_header": true,
     "header_scope": "markup.heading",

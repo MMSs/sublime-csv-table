@@ -42,14 +42,19 @@ Each column gets its own colour, taken from your colour scheme, so it is easy to
 
 The syntax matches the delimiter: `CSV`, `CSV (Semicolon)`, `CSV (Tab)`, or `CSV (Pipe)`. `.csv` files open as `CSV` and `.tsv` files open as `CSV (Tab)`.
 
-To tint the stripes, the plugin writes a small rules-only scheme file to `Packages/User/CSV Table/`. Sublime merges it into the active colour scheme. To turn the header or stripes off, open **Preferences → Package Settings → CSV Table → Settings** (or **Preferences: CSV Table Settings** in the command palette) and set:
+To turn the column colours, the header line or the stripes off, open **Preferences → Package Settings → CSV Table → Settings** (or **Preferences: CSV Table Settings** in the command palette) and set:
 
 ```json
 {
+    "color_columns": false,
     "underline_header": false,
     "stripe_rows": false
 }
 ```
+
+With `color_columns` off, every cell, quotes included, uses the scheme's plain text colour.
+
+For the stripes and plain columns, the plugin writes a small rules-only scheme file to `Packages/User/CSV Table/`. Sublime merges it into the active colour scheme, so your own scheme stays in use.
 
 Highlighting stops after `max_highlight_lines` (default 20000) to keep large files fast.
 

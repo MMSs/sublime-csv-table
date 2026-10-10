@@ -15,6 +15,7 @@ if _PACKAGE_DIR not in sys.path:
     sys.path.insert(0, _PACKAGE_DIR)
 
 from csv_format import FormatError, format_csv_with_delimiter
+from csv_scheme import scheme_rules
 
 _SYNTAX_BY_DELIMITER = {
     ",": "Packages/CSV Table/CSV.sublime-syntax",
@@ -129,8 +130,9 @@ def highlight(view: sublime.View) -> None:
     records = _records(view, settings.get("max_highlight_lines", 20000))
     header = records[:1] if settings.get("underline_header", True) else []
     stripes = records[2::2] if settings.get("stripe_rows", True) else []
+    color_columns = settings.get("color_columns", True)
     # Without a stripe rule Sublime fills with the opaque foreground colour.
-    if stripes and not _ensure_stripe_color(view):
+    if not _ensure_scheme_rules(view, bool(stripes), color_columns) and stripes:
         stripes = []
     view.add_regions(_STRIPES_KEY, stripes, _STRIPE_SCOPE, "", sublime.DRAW_NO_OUTLINE)
     _indent_continuations(view, records, stripes)
@@ -287,8 +289,8 @@ def _lines(view: sublime.View, records: list) -> List[sublime.Region]:
     return [line for record in records for line in view.lines(record)]
 
 
-def _ensure_stripe_color(view: sublime.View) -> bool:
-    """Add a faint stripe colour to the active colour scheme.
+def _ensure_scheme_rules(view: sublime.View, stripes: bool, color_columns: bool) -> bool:
+    """Add the stripe colour, or plain columns, to the active colour scheme.
 
     Sublime merges colour scheme files that share a name, so a rules-only
     file under Packages/User/CSV Table extends whatever scheme is in use.
@@ -307,12 +309,8 @@ def _ensure_stripe_color(view: sublime.View) -> bool:
     if not schemes:
         return False
     foreground = view.style().get("foreground", "#808080")[:7]
-    rule = {
-        "name": "CSV Table stripe",
-        "scope": _STRIPE_SCOPE,
-        "background": foreground + _STRIPE_ALPHA,
-    }
-    text = json.dumps({"rules": [rule]}, indent=4) + "\n"
+    rules = scheme_rules(foreground, _STRIPE_SCOPE, _STRIPE_ALPHA, stripes, color_columns)
+    text = json.dumps({"rules": rules}, indent=4) + "\n"
     directory = os.path.join(sublime.packages_path(), "User", "CSV Table")
     for scheme_path in schemes:
         name = os.path.splitext(os.path.basename(scheme_path))[0]

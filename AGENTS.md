@@ -8,6 +8,7 @@ CSV Table is a Sublime Text 4 plugin with one command, **Format CSV Table**, tha
 - `csv_table.py`: `format_csv_table` command, delimiter quick panel, syntax switch, header rule, row stripes (phantoms + a generated scheme in `Packages/User/CSV Table/`).
 - `scripts/build_syntaxes.py`: writes the four `CSV*.sublime-syntax` files. Never edit those by hand.
 - `CSV Table.sublime-settings`, `Default.sublime-commands`: package settings and palette entry.
+- `messages.json`, `messages/`: text Package Control shows after install.
 - `scripts/release/bump.mjs`: version bump + changelog for the release workflow.
 
 ## Commands

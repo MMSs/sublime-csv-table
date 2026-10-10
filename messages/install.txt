@@ -1,0 +1,16 @@
+CSV Table
+=========
+
+Format a CSV buffer as an aligned, coloured table.
+
+1. Open a CSV file.
+2. Open the command palette and run "Format CSV Table".
+3. Pick Auto-detect, or the delimiter if detection is wrong.
+
+Undo once to get the previous text back.
+
+To turn off the header underline or the row stripes, set
+"underline_header" or "stripe_rows" to false in
+Packages/User/CSV Table.sublime-settings.
+
+Docs and issues: https://github.com/MMSs/sublime-csv-table

@@ -2,5 +2,13 @@
     {
         "caption": "Format CSV Table",
         "command": "format_csv_table"
+    },
+    {
+        "caption": "Preferences: CSV Table Settings",
+        "command": "edit_settings",
+        "args": {
+            "base_file": "${packages}/CSV Table/CSV Table.sublime-settings",
+            "default": "// Settings in here override those in \"CSV Table/CSV Table.sublime-settings\"\n{\n\t$0\n}\n"
+        }
     }
 ]

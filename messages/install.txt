@@ -9,8 +9,8 @@ Format a CSV buffer as an aligned, coloured table.
 
 Undo once to get the previous text back.
 
-To turn off the header underline or the row stripes, set
-"underline_header" or "stripe_rows" to false in
-Packages/User/CSV Table.sublime-settings.
+To turn off the header underline or the row stripes, run
+"Preferences: CSV Table Settings" and set "underline_header" or
+"stripe_rows" to false.
 
 Docs and issues: https://github.com/MMSs/sublime-csv-table

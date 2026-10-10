@@ -1,0 +1,12 @@
+{
+    // Underline the first record.
+    "underline_header": true,
+    "header_scope": "markup.heading",
+
+    // Shade every other record after the header.
+    // The colour is a faint tint of the colour scheme's foreground.
+    "stripe_rows": true,
+
+    // Skip highlighting past this many lines, to keep large files fast.
+    "max_highlight_lines": 20000
+}

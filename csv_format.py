@@ -14,6 +14,10 @@ _GAP_CHARACTERS = set(" \u00a0\u202f")
 _WHITESPACE_SEPARATORS = set(" \u00a0\u202f")
 _BOUNDARIES = set(",;\t|\r\n")
 _EXPONENT_RE = re.compile(r"[eE][+-]?\d+$")
+_LINE_BREAK_RE = re.compile(r"\r\n|\r|\n")
+# The editor shows a quoted cell's later lines one column in, under the
+# first character after the opening quote.
+_CONTINUATION_INDENT = 1
 _SIGN_CHARACTERS = set("+-")
 
 
@@ -33,6 +37,14 @@ class _Field:
 
 def format_csv(text: str, delimiter: Optional[str] = None) -> str:
     """Return aligned CSV. delimiter None auto-detects. Raises FormatError."""
+    formatted, _delimiter = format_csv_with_delimiter(text, delimiter)
+    return formatted
+
+
+def format_csv_with_delimiter(
+    text: str, delimiter: Optional[str] = None
+) -> Tuple[str, str]:
+    """Return aligned CSV and the delimiter used. Raises FormatError."""
     if text.strip(" \t\r\n\u00a0\u202f") == "":
         raise FormatError(REASON_EMPTY)
     quote = _choose_quote(text)
@@ -47,7 +59,7 @@ def format_csv(text: str, delimiter: Optional[str] = None) -> str:
     formatted = newline.join(lines)
     if text.endswith("\n") or text.endswith("\r"):
         formatted += newline
-    return formatted
+    return formatted, delimiter
 
 
 def _choose_quote(text: str) -> str:
@@ -251,16 +263,59 @@ def _align(
             cells.append((shown, _is_number(interior, delimiter)))
         columns.append(_pad_column(cells))
     separator = delimiter if delimiter == "\t" else f"{delimiter} "
+    records = [
+        separator.join(column[data_index] for column in columns).rstrip(" ")
+        for data_index in range(len(data_rows))
+    ]
+    ends = [
+        _record_end(record, [column[data_index] for column in columns], separator)
+        for data_index, record in enumerate(records)
+    ]
+    # Pad every record to the widest one, so the table is a rectangle and
+    # row stripes in the editor end at the same column.
+    table_width = max(ends)
     lines: List[str] = []
     data_index = 0
     for row in rows:
         if row is None:
             lines.append("")
             continue
-        parts = [columns[column_index][data_index] for column_index in range(width)]
-        lines.append(separator.join(parts).rstrip(" "))
+        padding = table_width - ends[data_index]
+        lines.append(records[data_index] + " " * padding)
         data_index += 1
     return lines
+
+
+def _record_end(record: str, parts: List[str], separator: str) -> int:
+    """Return the column where a trimmed record's last line ends.
+
+    A line that continues a quoted cell is measured from where the editor
+    shows it, just after the cell's opening quote.
+    """
+    column = 0
+    indent = 0
+    for index, part in enumerate(parts):
+        if index:
+            column += len(separator)
+        pieces = _LINE_BREAK_RE.split(part)
+        if len(pieces) > 1:
+            indent = column + _CONTINUATION_INDENT
+            column = indent
+        column += len(pieces[-1])
+    return indent + len(_LINE_BREAK_RE.split(record)[-1])
+
+
+def _width(cell: str) -> int:
+    """Return the width of a cell's longest line, as the editor shows it."""
+    first, *rest = _LINE_BREAK_RE.split(cell)
+    return max([len(first)] + [_CONTINUATION_INDENT + len(piece) for piece in rest])
+
+
+def _ljust(cell: str, width: int) -> str:
+    """Pad a cell so its last line reaches width."""
+    pieces = _LINE_BREAK_RE.split(cell)
+    shown = len(pieces[-1]) + (_CONTINUATION_INDENT if len(pieces) > 1 else 0)
+    return cell + " " * (width - shown)
 
 
 def _render(field: _Field, delimiter: str, quote: str) -> str:
@@ -290,8 +345,8 @@ def _pad_column(cells: List[Tuple[str, bool]]) -> List[str]:
         digit_indexes.append(_last_digit_index(shown))
     numeric_indexes = [index for index in digit_indexes if index is not None]
     if not numeric_indexes:
-        column_width = max(len(shown) for shown, _numeric in cells)
-        return [shown.ljust(column_width) for shown, _numeric in cells]
+        column_width = max(_width(shown) for shown, _numeric in cells)
+        return [_ljust(shown, column_width) for shown, _numeric in cells]
     digit_column = max(numeric_indexes)
     tails = [
         len(shown) - index - 1
@@ -307,11 +362,11 @@ def _pad_column(cells: List[Tuple[str, bool]]) -> List[str]:
         left = digit_column - index
         right = max_tail - (len(shown) - index - 1)
         padded.append(f"{' ' * left}{shown}{' ' * right}")
-    column_width = max(len(value) for value in padded)
+    column_width = max(_width(value) for value in padded)
     aligned: List[str] = []
     for value, index in zip(padded, digit_indexes):
         if index is None:
-            aligned.append(value.ljust(column_width))
+            aligned.append(_ljust(value, column_width))
             continue
         aligned.append(value.rjust(column_width))
     return aligned

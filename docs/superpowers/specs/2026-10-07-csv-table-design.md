@@ -199,7 +199,7 @@ Take each numeric cell in its rendered form before padding. The digit column is 
 
 Join cells with the delimiter. For comma, semicolon, and pipe, add one U+0020 after the delimiter. For tab, the separator is the tab alone.
 
-Then strip trailing U+0020 from each output line. That only shortens the last column's trailing pad. Digit columns and earlier delimiters stay put. The next format pads again.
+Then strip trailing U+0020 from each output line and pad it with U+0020 to the width of the widest line, so every record ends at the same column and editor row stripes line up. Records that span lines, because a quoted cell holds a line break, are only stripped. The next format strips the padding and pads again.
 
 Worked example. Input:
 
